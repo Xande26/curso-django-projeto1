@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 from recipes import views
 from recipes.models import Category, Recipe
-from django.contrib.auth.models import User  # Correção aqui
+from django.contrib.auth.models import User 
 
 
 class RecipeViewsTest(TestCase):
