@@ -1,31 +1,13 @@
 from django.test import TestCase
 from recipes.models import Category, Recipe
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
+
+from recipes.views import category 
 
 
-class RecipeTestBase(TestCase):
-    def setUp(self):
-        return super().setUp()
-
-        recipe = Recipe.objects.create(
-            category=category,
-            author=author,
-            title='Recipe Title',
-            description='Recipe Description',
-            slug='recipe-slug',
-            preparation_time=10,
-            preparation_time_unit='Minutos',
-            servings=5,
-            servings_time_unit='Porção',
-            preparation_steps='Recipe Preparation Steps',
-            preparation_steps_is_html=False,
-            is_published=True,
-            cover ='IMAGEN'
-        )
-    
- 
+class RecipeMixxin:   
     def make_category(self, name='Category'):
-        return Category.objects.create(name='name')
+        return Category.objects.create(name=name)
 
     def make_author(
         self,
@@ -57,14 +39,13 @@ class RecipeTestBase(TestCase):
         preparation_steps='Recipe Preparation Steps',
         preparation_steps_is_html=False,
         is_published=True,
-        cover ='IMAGEN'
+        cover='IMAGEN'
     ): 
         if category_data is None:
             category_data = {}
 
         if author_data is None:
             author_data = {}
-
 
         return Recipe.objects.create(
             category=self.make_category(**category_data),
@@ -77,8 +58,25 @@ class RecipeTestBase(TestCase):
             servings=servings,
             servings_time_unit=servings_time_unit,
             preparation_steps=preparation_steps,
-            preparation_steps_is_html= preparation_steps_is_html,
+            preparation_steps_is_html=preparation_steps_is_html,
             is_published=is_published,
-            cover =cover
+            cover=cover
         )
     
+    def make_recipe_in_batch(self, quantity=10):
+        recipes = []
+        for i in range(quantity):
+            kwargs = {
+                'slug': f'r{i}',
+                'author_data': {'username': f'user{i}'}
+            }
+            recipe = self.make_recipe(**kwargs)  # ← DENTRO do for!
+            recipes.append(recipe)
+        return recipes
+
+
+class RecipeTestBase(TestCase, RecipeMixxin):
+    def setUp(self) -> None:
+        return super().setUp()
+        
+       
